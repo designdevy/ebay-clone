@@ -4,7 +4,7 @@ import { userRepo } from '../repositories';
 export const registerService = {
   validateUserData(username, password) {
     if (!username || !password) {
-      throw { status: 400, message: 'Username and/or password is missing' };
+      throw { status: 400, message: 'Username and/or password is required' };
     }
     if (password.length < 8) {
       throw { status: 400, message: 'Password must be at least 8 characters' };
