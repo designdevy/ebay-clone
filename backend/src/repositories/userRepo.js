@@ -1,11 +1,15 @@
-import db from '../data/connection';
+import { db } from '../data/connection';
 
-const userRepo = {
+export const userRepo = {
   async addUser(username, password) {
-    const sqlQuery = 'INSERT INTO users (username, password) VALUES (?)';
+    const sqlQuery = 'INSERT INTO users (username, password) VALUES (?, ?)';
     try {
       await db.query(sqlQuery, [username, password]);
     } catch (err) {
+      const userExistsRegex = new RegExp('Duplicate entry');
+      if (userExistsRegex.test(err.sqlMessage)) {
+        throw { status: 400, message: 'Username already exists' };
+      }
       throw { status: 500, message: err.sqlMessage };
     }
   },
@@ -19,5 +23,3 @@ const userRepo = {
     }
   },
 };
-
-export default userRepo;
