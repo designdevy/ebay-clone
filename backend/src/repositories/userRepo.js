@@ -4,7 +4,7 @@ export const userRepo = {
   async addUser(username, password) {
     const sqlQuery = 'INSERT INTO users (username, password) VALUES (?, ?)';
     try {
-      await db.query(sqlQuery, [username, password]);
+      return await db.query(sqlQuery, [username, password]);
     } catch (err) {
       const userExistsRegex = new RegExp('Duplicate entry');
       if (userExistsRegex.test(err.sqlMessage)) {
@@ -13,10 +13,10 @@ export const userRepo = {
       throw { status: 500, message: err.sqlMessage };
     }
   },
-  async getUser(username) {
-    const sqlQuery = 'SELECT * FROM users WHERE username = ?';
+  async getUser(id) {
+    const sqlQuery = 'SELECT id, username, cash FROM users WHERE id = ?';
     try {
-      const userQuery = await db.query(sqlQuery, username);
+      const userQuery = await db.query(sqlQuery, id);
       return userQuery.results[0];
     } catch (err) {
       throw { status: 500, message: err.sqlMessage };

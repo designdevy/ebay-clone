@@ -22,7 +22,8 @@ export const registerService = {
     this.validateUserData(username, password);
     const hash = bcrypt.hashSync(password, 10);
     const insertQuery = await userRepo.addUser(username, hash);
-    console.log(insertQuery);
-    return null;
+    const userId = insertQuery.results.insertId;
+    const user = await userRepo.getUser(userId);
+    return user;
   },
 };

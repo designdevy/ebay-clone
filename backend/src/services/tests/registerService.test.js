@@ -1,4 +1,5 @@
 import { registerService } from '../registerService';
+import { userRepo } from '../../repositories';
 
 test('missing username and password', () => {
   let errMessage;
@@ -61,4 +62,17 @@ test('wrong username format', () => {
     errMessage = err.message;
     expect(errMessage).toEqual('Incorrect username format');
   }
+});
+
+test('succesful registration', async () => {
+  const spyAddUser = jest.spyOn(userRepo, 'addUser');
+  spyAddUser.mockReturnValue({
+    results: {
+      insetId: 1,
+    },
+  });
+  const spyGetUser = jest.spyOn(userRepo, 'getUser');
+  spyGetUser.mockReturnValue('user');
+  const result = await registerService.registerUser('marcika123', 'password');
+  expect(result).toEqual('user');
 });
